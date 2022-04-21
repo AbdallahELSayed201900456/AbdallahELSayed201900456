@@ -1,0 +1,69 @@
+CREATE TABLE [dbo].[User] (
+    [Id]          INT            IDENTITY (1, 1) NOT NULL,
+    [FName]       NCHAR (10)     NOT NULL,
+    [LName]       NVARCHAR (50)  NOT NULL,
+    [Age]         INT            NOT NULL,
+    [Phone]       NVARCHAR (15)  NOT NULL,
+    [Email]       NVARCHAR (100) NOT NULL,
+    [Username]    NVARCHAR (50)  NOT NULL,
+    [Password]    NVARCHAR (50)  NOT NULL,
+    [Created_at]  DATE           NOT NULL,
+    [Updated_at]  DATE           NULL,
+    [num_Friends] INT            NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+CREATE TABLE [dbo].[Friend_Request] (
+    [Id]         INT  IDENTITY (1, 1) NOT NULL,
+    [User_id]    INT  NOT NULL,
+    [Friend_id]  INT  NOT NULL,
+    [Created_at] DATE NOT NULL,
+    [Accepted]   BIT  NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_User_Id] FOREIGN KEY ([User_id]) REFERENCES [dbo].[User] ([Id]),
+    CONSTRAINT [FK__Friend_Id] FOREIGN KEY ([Friend_id]) REFERENCES [dbo].[User] ([Id])
+);
+
+
+
+CREATE TABLE [dbo].[Post] (
+    [Id]             INT             IDENTITY (1, 1) NOT NULL,
+    [User_id]        INT             NOT NULL,
+    [Created_at]     DATE            NOT NULL,
+    [Total_likes]    INT             NULL,
+    [Total_comments] INT             NULL,
+    [Image]          VARBINARY (MAX) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_User_Post] FOREIGN KEY ([User_id]) REFERENCES [dbo].[User] ([Id])
+);
+
+
+
+
+
+CREATE TABLE [dbo].[Post_Comments] (
+    [Id]         INT  IDENTITY (1, 1) NOT NULL,
+    [Post_id]    INT  NOT NULL,
+    [User_id]    INT  NOT NULL,
+    [Created_at] DATE NOT NULL,
+    [Comment]    TEXT NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Comment_Post] FOREIGN KEY ([Post_id]) REFERENCES [dbo].[Post] ([Id]),
+    CONSTRAINT [FK_Comment_User] FOREIGN KEY ([User_id]) REFERENCES [dbo].[User] ([Id])
+);
+
+
+
+
+
+
+CREATE TABLE [dbo].[Post_Likes] (
+    [Id]         INT  IDENTITY (1, 1) NOT NULL,
+    [Post_id]    INT  NOT NULL,
+    [User_id]    INT  NOT NULL,
+    [Created_at] DATE NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Like_Post] FOREIGN KEY ([Post_id]) REFERENCES [dbo].[Post] ([Id]),
+    CONSTRAINT [FK_Like_User] FOREIGN KEY ([User_id]) REFERENCES [dbo].[User] ([Id])
+);
